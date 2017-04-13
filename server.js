@@ -48,8 +48,8 @@ const server = net.createServer((connection) => {
         } else {
           clientArr.forEach((element) => {
             if (element === connection) {
-              connection.userName = data.toString().slice(1, -1);
               nameChangeLog.push(`${connection.userName}: ${data.toString()}`);
+              connection.userName = data.toString().slice(1, -1);
             }
           });
         }
@@ -69,6 +69,10 @@ const server = net.createServer((connection) => {
           }
         });
         privMessageLog.push(`${connection.userName}: ${data.toString()}`);
+        break;
+
+      case '~' : //Request to see user list
+        connection.write(`${clientArr.map((element) => element.userName).join(', ')}`);
         break;
 
       default: //Default user sends message to group
@@ -92,9 +96,11 @@ server.listen({port: 3000}, () => {
 //Server Admin chats and admin tools
 process.stdin.on('data', (data) => {
   switch (data.toString().charAt(0)) {
+
     case '?' : //Display admin tools
       console.log(adminTools);
       break;
+
     case '!' : //Kick User
       clientArr.filter((element) => {
         return element.userName === data.toString().slice(1, -1);
@@ -103,6 +109,7 @@ process.stdin.on('data', (data) => {
         element.end(`${server.userName}: You Have Been Kicked`);
       });
       break;
+
     case '@' : //Send private Message to user
       let privUser = data.toString().slice(1, data.toString().indexOf(' '));
       let message = data.toString().slice(data.toString().indexOf(' ')).slice(1);
@@ -112,6 +119,27 @@ process.stdin.on('data', (data) => {
         }
       });
       break;
+
+    case '~' : //Request to see user list
+      console.log(`${clientArr.map((element) => element.userName).join(', ')}`);
+      break;
+
+    case '*' :
+      console.log(privMessageLog.join('\n'));
+      break;
+
+    case '$' :
+      console.log(nameChangeLog.join('\n'));
+      break;
+
+    case '%' :
+      console.log(fullChatLog.join('\n'));
+      break;
+
+    case '-' :
+      console.log(serverMessageLog.join('\n'));
+      break;
+
     default : //Broadcast Message to all
       clientArr.forEach((element) => {
       element.write(`${server.userName} : ${data}`);
