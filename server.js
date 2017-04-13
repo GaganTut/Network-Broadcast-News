@@ -4,9 +4,9 @@ const net = require('net');
 const clientArr = [];
 const fullChatLog = [];
 const specialKeys = `
-  '?' : 'Help',\n
-  '$' : 'Set Username',\n
-  '/' : 'Secret Message to Server Admin Only',\n
+  '?' : 'Help'\n
+  '$' : 'Set Username'\n
+  '/' : 'Secret Message to Server Admin Only'\n
   '@' : 'Attach Username to Send Private'
 `;
 
