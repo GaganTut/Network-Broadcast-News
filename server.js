@@ -88,9 +88,11 @@ const server = net.createServer((connection) => {
         });
     }
     connection.msgTimer.push({
-      time: new Date().getTime()
+      time: new Date().getTime() //Creates object that records time of message
     });
+    //make sure at least 5 messages have been sent
     if (connection.msgTimer.length >= 5) {
+      //check if last message came within 5 seconds of the 5th message from end
       if (connection.msgTimer[connection.msgTimer.length - 1].time - connection.msgTimer[connection.msgTimer.length - 5].time <= 5000) {
         connection.end('Kicked for Spamming');
       }
