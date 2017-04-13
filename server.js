@@ -33,7 +33,7 @@ const server = net.createServer((connection) => {
   server.userName = '[ADMIN]';
   //When socket first connects, give anonymous userName/send user Tools
   clientArr.push(connection);
-  connection.userName = 'Anonymous';
+  connection.userName = `Anonymous${clientArr.length}`;
   connection.write(`${specialKeys}\nENJOY CHATTING!\n${divider}`);
   //Event Listener for when data comes in. Checks for character for special tools
   connection.on('data', (data) => {
@@ -125,19 +125,19 @@ process.stdin.on('data', (data) => {
       break;
 
     case '*' :
-      console.log(privMessageLog.join('\n'));
+      console.log(privMessageLog.join(''));
       break;
 
     case '$' :
-      console.log(nameChangeLog.join('\n'));
+      console.log(nameChangeLog.join(''));
       break;
 
     case '%' :
-      console.log(fullChatLog.join('\n'));
+      console.log(fullChatLog.join(''));
       break;
 
     case '-' :
-      console.log(serverMessageLog.join('\n'));
+      console.log(serverMessageLog.join(''));
       break;
 
     default : //Broadcast Message to all
