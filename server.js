@@ -34,6 +34,8 @@ const server = net.createServer((connection) => {
   //When socket first connects, give anonymous userName/send user Tools
   clientArr.push(connection);
   connection.userName = `Anonymous${clientArr.length}`;
+  connection.msgTimer = [];
+
   connection.write(`${specialKeys}\nENJOY CHATTING!\n${divider}`);
   //Event Listener for when data comes in. Checks for character for special tools
   connection.on('data', (data) => {
@@ -85,6 +87,14 @@ const server = net.createServer((connection) => {
           }
         });
     }
+    connection.msgTimer.push({
+      time: new Date().getTime()
+    });
+    if (connection.msgTimer.length >= 5) {
+      if (connection.msgTimer[connection.msgTimer.length - 1].time - connection.msgTimer[connection.msgTimer.length - 5].time <= 5000) {
+        connection.end('Kicked for Spamming');
+      }
+    }
   });
 });
 
@@ -124,19 +134,19 @@ process.stdin.on('data', (data) => {
       console.log(`${clientArr.map((element) => element.userName).join(', ')}`);
       break;
 
-    case '*' :
+    case '*' : //Read Private Message Log
       console.log(privMessageLog.join(''));
       break;
 
-    case '$' :
+    case '$' : //Read namechange log
       console.log(nameChangeLog.join(''));
       break;
 
-    case '%' :
+    case '%' : //read chat log
       console.log(fullChatLog.join(''));
       break;
 
-    case '-' :
+    case '-' : // read user to admin message log
       console.log(serverMessageLog.join(''));
       break;
 
